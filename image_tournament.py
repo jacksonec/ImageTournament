@@ -3,48 +3,53 @@ import random
 import tkinter as tk
 from PIL import ImageTk, Image
 
-root = tk.Tk()
-root.title("My Window")
-root.geometry("1000x1000")
+class image_tourney_window:
+    def build_window(self):
+        self.image1 = Image.open(self.image1_path)
+        self.image2 = Image.open(self.image2_path)
 
-# Get a list of all the image file names in the "images" folder
-image_folder = "images"
-image_files = [os.path.join(image_folder, f) for f in os.listdir(image_folder) if os.path.isfile(os.path.join(image_folder, f))]
+        width = 250
+        height1 = int((width / float(self.image1.size[0])) * self.image1.size[1])
+        height2 = int((width / float(self.image2.size[0])) * self.image2.size[1])
+        self.image1 = self.image1.resize((width, height1))
+        self.image2 = self.image2.resize((width, height2))
+        win_width = (width * 2) + 50
+        win_height = height1 + 50
 
-# Select two random images from the list
-random_images = random.sample(image_files, 2)
+        root = tk.Tk()
+        root.title("Tournament Time!")
+        root.geometry(f"{win_width}x{win_height}")
 
-# Load the images using Pillow
-image1 = Image.open(random_images[0])
-image2 = Image.open(random_images[1])
+        image_frame = tk.Frame(root)
+        image_frame.pack()
 
-# Resize the images to fit in the window
-width = 250
-height1 = int((width / float(image1.size[0])) * image1.size[1])
-height2 = int((width / float(image2.size[0])) * image2.size[1])
-image1 = image1.resize((width, height1))
-image2 = image2.resize((width, height2))
+        tk_image1 = ImageTk.PhotoImage(self.image1)
+        tk_image2 = ImageTk.PhotoImage(self.image2)
 
-# Convert the images to Tkinter PhotoImage objects
-tk_image1 = ImageTk.PhotoImage(image1)
-tk_image2 = ImageTk.PhotoImage(image2)
-# Create a new frame for the radio buttons
-radio_frame = tk.Frame(root)
-radio_frame.pack()
+        image_display1 = tk.Label(image_frame, image=tk_image1)
+        image_display2 = tk.Label(image_frame, image=tk_image2)
 
-# Create the radio buttons
-left_image_rb = tk.Radiobutton(radio_frame, text="Left Image")
-left_image_rb.pack(side="left")
-center_image_rb = tk.Radiobutton(radio_frame, text="Center Image")
-center_image_rb.pack(side="left")
-right_image_rb = tk.Radiobutton(radio_frame, text="Right Image")
-right_image_rb.deselect()
-right_image_rb.pack(side="left")
+        image_display1.pack(side="left")
+        image_display2.pack(side="left")
 
-# Create two labels to display the images
-label1 = tk.Label(root, image=tk_image1)
-label1.pack(side="left")
-label2 = tk.Label(root, image=tk_image2)
-label2.pack(side="left")
+        tie_button = tk.Button(root, text="Draw!", command=self.draw)
+        tie_button.
+        tie_button.pack()
 
-root.mainloop()
+        # Start the main loop
+        root.mainloop()
+
+    def draw(self):
+        pass
+
+    def __init__(self, image1_path, image2_path, window_title="Tournament Time"):
+        self.image1 = None
+        self.image2 = None
+        self.image1_path = image1_path
+        self.image2_path = image2_path
+        self.window_title = window_title
+        self.build_window()
+
+
+
+blah = image_tourney_window(r"images\1.jpg", r"images\2.jpg")
