@@ -1,20 +1,17 @@
-#import random
-#import queue
-#import threading
 from skimage import metrics
 import cv2
-#from PIL import Image
 import numpy as np
-#import os
-#import string
-
 
 class ImageCompare:
+    def image_dimensions(self, image):
+        height, width = self.image1.shape[:2]
+        return width, height
+
     def image_size_different(self):
-        height1, width1 = self.image1.shape[:2]
-        height2, width2 = self.image2.shape[:2]
-        self.image1_dimensions = width1, height1
-        self.image2_dimensions = width2, height2
+        width1 = self.image1_dimensions[0]
+        width2 = self.image2_dimensions[0]
+        height1 = self.image1_dimensions[1]
+        height2 = self.image2_dimensions[1]
 
         if (width1 == width2) and (height1 == height2):
             return False
@@ -22,7 +19,7 @@ class ImageCompare:
         return True
 
     def resize_image(self, image, width, height):
-        image = cv2.resize(image, (height, width))
+        image = cv2.resize(image, (width, height))
         return image
 
     def __init__(self, file_path1, file_path2, force_resize=True, width=250, height=250):
@@ -36,10 +33,12 @@ class ImageCompare:
         self.error = None
         self.image1 = cv2.imread(file_path1)
         self.image2 = cv2.imread(file_path2)
+        self.image1_dimensions = self.image_dimensions(self.image1)
+        self.image2_dimensions = self.image_dimensions(self.image2)
 
         if not force_resize:
             if self.image_size_different():
-                self.image2 = self.resize_image(self.image2, self.image1_dimensions[1], self.image1_dimensions[0])
+                self.image2 = self.resize_image(self.image2, self.image1_dimensions[0], self.image1_dimensions[1])
                 self.error = "Images are different resolutions. Resizing to 250x250."
         else:
             self.image1 = self.resize_image(self.image1, width, height)
