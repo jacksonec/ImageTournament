@@ -31,10 +31,11 @@ def resize_image(file_path, width_pixels = 250, height_pixels = 250):
 
 
 
-def image_compare_histogram(file_path1, file_path2):
+def image_compare_histogram(file_path1, file_path2, block_resize=False):
     # Calculate the color histograms of the images
-    image1 = resize_image(file_path1)
-    image2 = resize_image(file_path2)
+    if not block_resize:
+        image1 = resize_image(file_path1)
+        image2 = resize_image(file_path2)
 
     hist1 = cv2.calcHist([image1], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
     hist2 = cv2.calcHist([image2], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
@@ -48,9 +49,11 @@ def image_compare_histogram(file_path1, file_path2):
 
     return distance
 
-def image_compare_ssim(file_path1, file_path2):
-    image1 = resize_image(file_path1)
-    image2 = resize_image(file_path2)
+def image_compare_ssim(file_path1, file_path2, block_resize=False):
+
+    if not block_resize:
+        image1 = resize_image(file_path1)
+        image2 = resize_image(file_path2)
 
     # Convert the images to grayscale
     image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
@@ -60,9 +63,10 @@ def image_compare_ssim(file_path1, file_path2):
     ssim = metrics.structural_similarity(image1, image2)
     return ssim
 
-def image_compare_mse(file_path1, file_path2):
-    image1 = resize_image(file_path1)
-    image2 = resize_image(file_path2)
+def image_compare_mse(file_path1, file_path2, block_resize=False):
+    if not block_resize:
+        image1 = resize_image(file_path1)
+        image2 = resize_image(file_path2)
 
     image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
     image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
@@ -71,11 +75,11 @@ def image_compare_mse(file_path1, file_path2):
     err /= float(image1.shape[0] * image2.shape[1])
     return err
 
-def image_compare(file_path1, file_path2):
+def image_compare(file_path1, file_path2, block_resize=False):
     result_dictionary = {}
-    result_dictionary["histogram"] = image_compare_histogram(file_path1,file_path2)
-    result_dictionary["ssim"] = image_compare_ssim(file_path1, file_path2)
-    result_dictionary["mse"] = image_compare_mse(file_path1,file_path2)
+    result_dictionary["histogram"] = image_compare_histogram(file_path1,file_path2, block_resize)
+    result_dictionary["ssim"] = image_compare_ssim(file_path1, file_path2, block_resize)
+    result_dictionary["mse"] = image_compare_mse(file_path1,file_path2, block_resize)
 
     return result_dictionary
 
