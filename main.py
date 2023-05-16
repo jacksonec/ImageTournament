@@ -1,4 +1,4 @@
-import imageCompare
+import image_comparison
 import os
 import shutil
 from itertools import chain
