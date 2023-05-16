@@ -118,5 +118,5 @@ def get_image_files(directory_path):
     return image_files
 
 
-blah = TourneyBracket(get_image_files(r"images"))
+blah = TourneyBracket(get_image_files(r"../images"))
 print(blah.final_winner)
