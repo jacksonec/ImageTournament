@@ -17,27 +17,29 @@ class ImageCompare:
         self.image2_dimensions = width2, height2
 
         if (width1 == width2) and (height1 == height2):
-            return True
+            return False
 
-        return False
+        return True
 
     def resize_image(self, image, width, height):
         image = cv2.resize(image, (height, width))
         return image
 
     def __init__(self, file_path1, file_path2, force_resize=True, width=250, height=250):
+        self.image1_dimensions = None
+        self.image2_dimensions = None
         self.file_path1 = file_path1
         self.file_path2 = file_path2
         self.width = width
         self.height = height
-        self.force_resize = True
+        self.force_resize = force_resize
         self.error = None
         self.image1 = cv2.imread(file_path1)
         self.image2 = cv2.imread(file_path2)
 
         if not force_resize:
             if self.image_size_different():
-                self.resize_image(self.image2, self.image1_dimensions[0], self.image1_dimensions[1])
+                self.image2 = self.resize_image(self.image2, self.image1_dimensions[1], self.image1_dimensions[0])
                 self.error = "Images are different resolutions. Resizing to 250x250."
         else:
             self.image1 = self.resize_image(self.image1, width, height)
@@ -89,5 +91,4 @@ class ImageCompareMSE(ImageCompare):
         err = np.sum((image1.astype("float") - image2.astype("float")) ** 2)
         err /= float(image1.shape[0] * image2.shape[1])
         return err
-
 
