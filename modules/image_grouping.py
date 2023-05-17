@@ -2,7 +2,7 @@ import image_comparison
 import threading
 import queue
 import os
-
+import file_stuff
 
 def get_image_files(path):
     image_files = []
@@ -91,16 +91,6 @@ class ImageDifferential:
         self.results_list = results
 
     @property
-    def results_list(self):
-        if len(self.results_list) == 0:
-            self.compare_images()
-        return self.results_list
-
-    @results_list.setter
-    def results_list(self, value):
-        self.compare_images()
-
-    @property
     def cancel(self):
         return self.cancel
 
@@ -123,11 +113,11 @@ class ImageList:
             temp_image_list = self.image_list
             temp_image_list.remove(image_path)
             new_compare = ImageDifferential(image_path, temp_image_list)
-            thread = threading.Thread(target=new_compare.results_list)
-            thread.start
 
 
 
 
-new_compare = image_comparison.ImageCompare(r"C:\Users\jacks\PycharmProjects\ImageTournament\images\1.jpg", r"C:\Users\jacks\PycharmProjects\ImageTournament\images\2.jpg")
-print(new_compare.ssim)
+file_list = file_stuff.FileList(r"C:\Users\jacks\PycharmProjects\ImageTournament\images", [".jpg", ".png"], False)
+
+test_list = ImageList(file_list.files)
+
