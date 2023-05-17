@@ -28,6 +28,7 @@ class FileList:
     def files_from_path(self, file_path, extensions, list_of_files, recursive=False):
         # Build the file list using the specified file_path, extensions, and recursion settings
         build_file_list_by_path(file_path, extensions, list_of_files, recursive)
+        return list_of_files
 
     def __init__(self, file_path=None, extensions=None, recursive=False):
         self.file_path = file_path
