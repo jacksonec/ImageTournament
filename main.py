@@ -2,7 +2,8 @@ import os
 import shutil
 from itertools import chain
 
-def get_file_dictionary(directory):
+
+def get_file_dictionary(directory: str) -> dict:
     file_dictionary = {}
     for filename in os.listdir(directory):
         # Check if the file is an image file (optional)
