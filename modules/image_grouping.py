@@ -112,6 +112,7 @@ class ImageDifferential:
     def cancel(self, value):
         self._cancel = value
 
+
 # A class for an ungrouped list of images, compares them, returning a list of images in their
 # comparison values to any other image
 class ImageDiffList:
