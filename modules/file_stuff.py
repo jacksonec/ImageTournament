@@ -2,20 +2,12 @@ import os
 
 
 def build_file_list_by_path(file_path, file_extensions, file_list, get_subs=False):
-    file_extension_list = []
-
-    # If the file_extensions parameter is not a list, convert it to a list
-    if not isinstance(file_extensions, list):
-        file_extension_list.append(file_extensions)
-    else:
-        file_extension_list = file_extensions
-
     # Iterate over the files in the given file_path
     for file in os.listdir(file_path):
         item_path = os.path.join(file_path, file)
 
         # Check if the file matches any of the specified extensions
-        for extension in file_extension_list:
+        for extension in file_extensions:
             if file.endswith(extension):
                 file_list.append(item_path)
 
@@ -33,12 +25,31 @@ class FileList:
     def __init__(self, file_path=None, extensions=None, recursive=False):
         self.file_path = file_path
         self.files = []
-        self.extensions = extensions
+        self.file_extension_list = []
+
+        # If the file_extensions parameter is not a list, convert it to a list
+        if not isinstance(extensions, list):
+            self.file_extension_list.append(extensions)
+        else:
+            self.file_extension_list = extensions
+
         self.recursive = recursive
 
         # If a file_path is provided, automatically build the file list
         if file_path is not None:
-            self.files_from_path(self.file_path, extensions, self.files, recursive)
+            self.files_from_path(self.file_path, self.file_extension_list, self.files, recursive)
+
+    def add_extension(self, value):
+        self.file_extension_list.append(value)
+
+    def remove_extension(self, value):
+        self.file_extension_list.remove(value)
+
+    def clear_files(self):
+        self.files = []
+
+    def clear_extensions(self):
+        self.file_extension_list = []
 
     def add_file(self, value):
         # Add a file to the file list
