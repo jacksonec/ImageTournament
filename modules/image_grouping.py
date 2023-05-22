@@ -153,9 +153,14 @@ class ImageDiffList:
             new_compare.compare_images()
             temp_var = len(new_compare.results_list)
             # Need a dictionary here, stores one image value, then another as keys
-            print(f"Len: {temp_var}: {new_compare.results_list}")
-            sorted_key = tuple(sorted)
+            for item in new_compare.results_list:
+                sorted_key = (item["image1"], item["image2"])
+                sorted_key = tuple(sorted(sorted_key))
+                if sorted_key not in image_table:
+                    image_table[sorted_key] = {"ssim": item["ssim"], "mse": item["mse"], "histogram": item["histogram"]}
 
+        for item in image_table.keys():
+            print(f"{item}: {image_table[item]['ssim']}")
     @property
     def force_resize(self):
         return self._force_resize

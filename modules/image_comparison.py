@@ -2,6 +2,7 @@ from skimage import metrics
 import cv2
 import numpy as np
 
+def get_md5_hash(file_path)
 
 class ImageCompare:
     def image_dimensions(self, image):
@@ -33,6 +34,8 @@ class ImageCompare:
         self.height = height
         self.force_resize = force_resize
         self.error = None
+        self.image1_hash = None
+        self.image2_hash = None
         self.image1 = cv2.imread(file_path1)
         self.image2 = cv2.imread(file_path2)
         self.image1_dimensions = self.image_dimensions(self.image1)
@@ -45,9 +48,12 @@ class ImageCompare:
             self.image1 = self.resize_image(self.image1, width, height)
             self.image2 = self.resize_image(self.image2, width, height)
 
-        self.histogram = self.calc_histogram()
-        self.ssim = self.calc_ssim()
-        self.mse = self.calc_mse()
+        if calc_histogram:
+            self.histogram = self.calc_histogram()
+        if calc_ssim:
+            self.ssim = self.calc_ssim()
+        if calc_mse:
+            self.mse = self.calc_mse()
 
 
     def calc_histogram(self):
