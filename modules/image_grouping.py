@@ -95,7 +95,7 @@ class ImageDifferential:
         for thread in threads:
             if self.debug_mode:
                 print("Thread complete")
-            thread.join(timeout=0.1)
+            thread.join(timeout=5)
 
         while not results_queue.empty():
             result = results_queue.get()
@@ -141,6 +141,7 @@ class ImageDiffList:
         self.image_path_list = []
 
     def build_image_table(self):
+        image_table = {}
 
         for image_path in self.image_path_list:
             temp_image_list = self.image_path_list
@@ -151,7 +152,9 @@ class ImageDiffList:
 
             new_compare.compare_images()
             temp_var = len(new_compare.results_list)
+            # Need a dictionary here, stores one image value, then another as keys
             print(f"Len: {temp_var}: {new_compare.results_list}")
+            sorted_key = tuple(sorted)
 
     @property
     def force_resize(self):
