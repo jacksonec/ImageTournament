@@ -1,3 +1,5 @@
 /images/
+__pycache__/imageCompare.cpython-311.pyc
+*.pyc
 modules/__pycache__/image_comparison.cpython-311.pyc
 modules/__pycache__/file_stuff.cpython-311.pyc

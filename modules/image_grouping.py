@@ -197,7 +197,7 @@ class ImageDiffList:
 file_list = file_stuff.FileList(r"C:\Users\jacks\PycharmProjects\ImageTournament\images", [".jpg", ".png"], False)
 
 imageDiff = ImageDiffList(file_list.files)
-imageDiff.threads = 25
+imageDiff.threads = 1
 imageDiff.force_resize = False
 imageDiff.build_image_table()
 
