@@ -16,18 +16,6 @@ def get_md5_hash(file_path):
 
 
 class ImageCompare:
-    def image_size_different(self):
-        self.image1.size
-        width2 = self.image2_dimensions[0]
-        height1 = self.image1_dimensions[1]
-        height2 = self.image2_dimensions[1]
-
-        val = True
-
-        if (width1 == width2) and (height1 == height2):
-            val = False
-
-        return val
 
     def resize_image(self, image, width, height):
         image = cv2.resize(image, (width, height))
@@ -46,7 +34,7 @@ class ImageCompare:
         self.image1 = cv2.imread(file_path1)
         self.image2 = cv2.imread(file_path2)
         self.image1_dimensions = self.image1.shape[:2]
-        self.image2_dimensions = self.image1.shape[:2]
+        self.image2_dimensions = self.image2.shape[:2]
         self.ssim = None
         self.histogram = None
         self.mse = None
@@ -60,9 +48,12 @@ class ImageCompare:
             self.mse = 0
 
         if not force_resize:
-            if self.image1_dimensions != self.image2_dimensions:
-                print("Ignoring force-resize flag. Images are different sizes.")
-                self.image2 = cv2.resize(self.image2, self.image1_dimensions)
+            if self.image1_dimensions[0] != self.image2_dimensions[0] or self.image1_dimensions[1] != \
+                    self.image2_dimensions[1]:
+                self.image2 = cv2.resize(self.image2, (self.image1_dimensions[1], self.image1_dimensions[0]))
+            else:
+                self.image1 = cv2.resize(self.image1, (width, height))
+                self.image2 = cv2.resize(self.image2, (width, height))
         else:
             self.image1 = cv2.resize(self.image1, (width, height))
             self.image2 = cv2.resize(self.image2, (width, height))
