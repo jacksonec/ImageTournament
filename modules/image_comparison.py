@@ -38,9 +38,10 @@ class ImageCompare:
         self.ssim = None
         self.histogram = None
         self.mse = None
-
         self.image1_hash = get_md5_hash(file_path1)
         self.image2_hash = get_md5_hash(file_path2)
+        key_temp_list = sorted([self.image1_hash, self.image2_hash])
+        self.comp_key = "".join(key_temp_list)
 
         if self.image1_hash == self.image2_hash:
             self.ssim = 1
@@ -50,7 +51,11 @@ class ImageCompare:
         if not force_resize:
             if self.image1_dimensions[0] != self.image2_dimensions[0] or self.image1_dimensions[1] != \
                     self.image2_dimensions[1]:
-                self.image2 = cv2.resize(self.image2, (self.image1_dimensions[1], self.image1_dimensions[0]))
+                if self.image1_dimensions[0] * self.image1_dimensions[1] > self.image2_dimensions[0] * \
+                        self.image2_dimensions[1]:
+                    self.image1 = cv2.resize(self.image1, (self.image2_dimensions[1], self.image2_dimensions[0]))
+                else:
+                    self.image2 = cv2.resize(self.image2, (self.image1_dimensions[1], self.image1_dimensions[0]))
             else:
                 self.image1 = cv2.resize(self.image1, (width, height))
                 self.image2 = cv2.resize(self.image2, (width, height))

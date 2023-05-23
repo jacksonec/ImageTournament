@@ -50,7 +50,7 @@ class ImageDifferential:
         :param results_queue: A threading queue, holds the data till all the threads are done
         """
         measures_dictionary = {"image1": primary_file_path, "image2": compare_image_path, "ssim": None,
-                               "mse": None, "histogram": None}
+                               "mse": None, "histogram": None, "md5key": None}
         semaphore.acquire()
         try:
             if not results_queue.empty():
@@ -66,6 +66,8 @@ class ImageDifferential:
                 measures_dictionary["mse"] = comparison.mse
             if self.histogram_compare:
                 measures_dictionary["histogram"] = comparison.histogram
+            measures_dictionary["md5key"] = comparison.comp_key
+
 
             results_queue.put(measures_dictionary)
         finally:
@@ -95,7 +97,7 @@ class ImageDifferential:
         for thread in threads:
             if self.debug_mode:
                 print("Thread complete")
-            thread.join(timeout=5)
+            thread.join(timeout=60)
 
         while not results_queue.empty():
             result = results_queue.get()
@@ -154,6 +156,7 @@ class ImageDiffList:
             temp_var = len(new_compare.results_list)
             # Need a dictionary here, stores one image value, then another as keys
             for item in new_compare.results_list:
+                print(item["md5key"])
                 sorted_key = (item["image1"], item["image2"])
                 sorted_key = tuple(sorted(sorted_key))
                 if sorted_key not in image_table:
@@ -197,7 +200,9 @@ class ImageDiffList:
 file_list = file_stuff.FileList(r"C:\Users\jacks\PycharmProjects\ImageTournament\images", [".jpg", ".png"], False)
 
 imageDiff = ImageDiffList(file_list.files)
-imageDiff.threads = 1
-imageDiff.force_resize = False
+imageDiff.threads = 25
+imageDiff.force_resize = True
+imageDiff.width = 3000
+imageDiff.height = 3000
 imageDiff.build_image_table()
 
