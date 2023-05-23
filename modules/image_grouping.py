@@ -157,12 +157,16 @@ class ImageDiffList:
 
             for item in new_compare.results_list:
                 # This is all janky
-                if sorted_key not in image_table:
-                    image_table[sorted_key] = {"ssim": item["ssim"], "mse": item["mse"], "histogram": item["histogram"],
-                                               "md5key": sorted_key}
+                comp_key = item["md5key"]
+                if comp_key not in image_table:
+                    print(item["image1"])
+                    print(item["image2"])
+                    image_table[comp_key] = {"ssim": item["ssim"], "mse": item["mse"], "histogram": item["histogram"],
+                                             "file1": item["image1"], "file2": item["image2"]}
 
         for item in image_table.keys():
-            print(f"{item}: {image_table[item]['ssim']}")
+            print(f"{item}: {image_table[item]}")
+
     @property
     def force_resize(self):
         return self._force_resize

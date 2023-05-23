@@ -14,12 +14,14 @@ def get_md5_hash(file_path):
 
     return md5_hash.hexdigest()
 
-def get_comp_key(file_path1, file_path2):
+
+def get_comp_key_and_hashes(file_path1, file_path2):
     file1_hash = get_md5_hash(file_path1)
     file2_hash = get_md5_hash(file_path2)
     key_temp_list = sorted([file1_hash, file2_hash])
     comp_key = "".join(key_temp_list)
-    return comp_key
+    hash_dictionary = {"md51": file1_hash, "md52": file2_hash, "comp_key": comp_key}
+    return hash_dictionary
 
 
 class ImageCompare:
@@ -45,14 +47,20 @@ class ImageCompare:
         self.ssim = None
         self.histogram = None
         self.mse = None
-        self.comp_key = get_comp_key(self.file_path1, self.file_path2)
+        hash_dictionary = get_comp_key_and_hashes(self.file_path1, self.file_path2)
+        self.comp_key = hash_dictionary["comp_key"]
+        self.image1_hash = hash_dictionary["md51"]
+        self.image2_hash = hash_dictionary["md52"]
 
         if self.image1_hash == self.image2_hash:
             self.ssim = 1
             self.histogram = 1
             self.mse = 0
 
-        if not force_resize:
+        if force_resize:
+            self.image1 = cv2.resize(self.image1, (width, height))
+            self.image2 = cv2.resize(self.image2, (width, height))
+        else:
             if self.image1_dimensions[0] != self.image2_dimensions[0] or self.image1_dimensions[1] != \
                     self.image2_dimensions[1]:
                 if self.image1_dimensions[0] * self.image1_dimensions[1] > self.image2_dimensions[0] * \
@@ -60,12 +68,6 @@ class ImageCompare:
                     self.image1 = cv2.resize(self.image1, (self.image2_dimensions[1], self.image2_dimensions[0]))
                 else:
                     self.image2 = cv2.resize(self.image2, (self.image1_dimensions[1], self.image1_dimensions[0]))
-            else:
-                self.image1 = cv2.resize(self.image1, (width, height))
-                self.image2 = cv2.resize(self.image2, (width, height))
-        else:
-            self.image1 = cv2.resize(self.image1, (width, height))
-            self.image2 = cv2.resize(self.image2, (width, height))
 
         if calc_histogram and self.histogram is None:
             self.histogram = self.calc_histogram()
