@@ -154,13 +154,12 @@ class ImageDiffList:
 
             new_compare.compare_images()
             temp_var = len(new_compare.results_list)
-            # Need a dictionary here, stores one image value, then another as keys
+
             for item in new_compare.results_list:
-                print(item["md5key"])
-                sorted_key = (item["image1"], item["image2"])
-                sorted_key = tuple(sorted(sorted_key))
+                # This is all janky
                 if sorted_key not in image_table:
-                    image_table[sorted_key] = {"ssim": item["ssim"], "mse": item["mse"], "histogram": item["histogram"]}
+                    image_table[sorted_key] = {"ssim": item["ssim"], "mse": item["mse"], "histogram": item["histogram"],
+                                               "md5key": sorted_key}
 
         for item in image_table.keys():
             print(f"{item}: {image_table[item]['ssim']}")

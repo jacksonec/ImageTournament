@@ -14,6 +14,13 @@ def get_md5_hash(file_path):
 
     return md5_hash.hexdigest()
 
+def get_comp_key(file_path1, file_path2):
+    file1_hash = get_md5_hash(file_path1)
+    file2_hash = get_md5_hash(file_path2)
+    key_temp_list = sorted([file1_hash, file2_hash])
+    comp_key = "".join(key_temp_list)
+    return comp_key
+
 
 class ImageCompare:
 
@@ -38,10 +45,7 @@ class ImageCompare:
         self.ssim = None
         self.histogram = None
         self.mse = None
-        self.image1_hash = get_md5_hash(file_path1)
-        self.image2_hash = get_md5_hash(file_path2)
-        key_temp_list = sorted([self.image1_hash, self.image2_hash])
-        self.comp_key = "".join(key_temp_list)
+        self.comp_key = get_comp_key(self.file_path1, self.file_path2)
 
         if self.image1_hash == self.image2_hash:
             self.ssim = 1
